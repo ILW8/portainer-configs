@@ -13,13 +13,8 @@ services:
       - --providers.file.filename=/etc/traefik/dynamic/udp5520.yml
       - --providers.file.watch=true
 
-      # Optional dashboard (remove if you don't want it exposed)
-      - --api.dashboard=true
-      - --api.insecure=true
-
     ports:
       - "5520:5520/udp"
-      - "8080:8080"   # optional dashboard
 
     configs:
       - source: traefik_udp5520
