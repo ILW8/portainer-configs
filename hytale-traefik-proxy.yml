@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:v3.3
+    command:
+      - --log.level=INFO
+
+      # Static: bind UDP entrypoint
+      - --entryPoints.udp5520.address=:5520/udp
+
+      # Dynamic: load from file provider
+      - --providers.file.filename=/etc/traefik/dynamic/udp5520.yml
+      - --providers.file.watch=true
+
+      # Optional dashboard (remove if you don't want it exposed)
+      - --api.dashboard=true
+      - --api.insecure=true
+
+    ports:
+      - "5520:5520/udp"
+      - "8080:8080"   # optional dashboard
+
+    configs:
+      - source: traefik_udp5520
+        target: /etc/traefik/dynamic/udp5520.yml
+        mode: 0444
+
+configs:
+  traefik_udp5520:
+    content: |
+      udp:
+        routers:
+          udp5520:
+            entryPoints:
+              - udp5520
+            service: udp5520-svc
+
+        services:
+          udp5520-svc:
+            loadBalancer:
+              servers:
+                - address: "100.64.136.29:5520"
