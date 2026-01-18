@@ -8,21 +8,23 @@ services:
 
       # Static: bind UDP entrypoint
       - --entryPoints.udp25565.address=:25565/udp
+      - --entryPoints.tcp25566.address=:25566/tcp
 
       # Dynamic: load from file provider
-      - --providers.file.filename=/etc/traefik/dynamic/udp25565.yml
+      - --providers.file.filename=/etc/traefik/dynamic/config.yml
       - --providers.file.watch=true
 
     ports:
       - "25565:25565/udp"
+      - "25566:25566/tcp"
 
     configs:
-      - source: traefik_udp25565
-        target: /etc/traefik/dynamic/udp25565.yml
+      - source: traefik_dynamic
+        target: /etc/traefik/dynamic/config.yml
         mode: 0444
 
 configs:
-  traefik_udp25565:
+  traefik_dynamic:
     content: |
       udp:
         routers:
@@ -36,3 +38,16 @@ configs:
             loadBalancer:
               servers:
                 - address: "100.64.136.29:25565"
+      
+      tcp:
+        routers:
+          tcp25566:
+            entryPoints:
+              - tcp25566
+            service: tcp25566-svc
+
+        services:
+          tcp25566-svc:
+            loadBalancer:
+              servers:
+                - address: "100.64.136.29:25566"
