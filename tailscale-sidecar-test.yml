@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  ts-testserver:
+    image: tailscale/tailscale:latest
+    hostname: ${TS_HOSTNAME}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_EXTRA_ARGS=--advertise-tags=${TS_ADVERTISE_TAGS}
+      - TS_STATE_DIR=/var/lib/tailscale
+    volumes:
+      - tailscale-data-testserver:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    restart: unless-stopped
+  testserver:
+    image: nginx
+    network_mode: service:ts-testserver
+    depends_on:
+      - ts-testserver
+volumes:
+  tailscale-data-testserver:
+    driver: local
