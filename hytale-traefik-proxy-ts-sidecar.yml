@@ -17,6 +17,8 @@ services:
       - NET_ADMIN
       - SYS_MODULE
     restart: unless-stopped
+    ports:
+      - "25565:25565/udp"
   traefik:
     image: traefik:v3.3
     command:
@@ -26,8 +28,6 @@ services:
       # Dynamic: load from file provider
       - --providers.file.filename=/etc/traefik/dynamic/config.yml
       - --providers.file.watch=true
-    ports:
-      - "25565:25565/udp"
     configs:
       - source: traefik_dynamic
         target: /etc/traefik/dynamic/config.yml
