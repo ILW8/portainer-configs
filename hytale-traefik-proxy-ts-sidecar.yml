@@ -9,6 +9,7 @@ services:
       - TS_EXTRA_ARGS=--advertise-tags=${TS_ADVERTISE_TAGS}
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
+      - TS_DEBUG_MTU=1200
     volumes:
       - tailscale-data-traefik:/var/lib/tailscale
     devices:
@@ -25,6 +26,7 @@ services:
       - --log.level=INFO
       # Static: bind UDP entrypoint
       - --entryPoints.udp25565.address=:25565/udp
+      - --entryPoints.udp25565.udp.timeout=15s
       # Dynamic: load from file provider
       - --providers.file.filename=/etc/traefik/dynamic/config.yml
       - --providers.file.watch=true
