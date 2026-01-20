@@ -17,6 +17,8 @@ services:
       - NET_ADMIN
       - SYS_MODULE
     restart: unless-stopped
+    networks:
+      - ts_traefik_net
   traefik:
     image: traefik:v3.3
     command:
@@ -38,6 +40,9 @@ services:
 volumes:
   tailscale-data-traefik:
     driver: local
+networks:
+  ts_traefik_net:
+    driver: bridge
 
 
 configs:
