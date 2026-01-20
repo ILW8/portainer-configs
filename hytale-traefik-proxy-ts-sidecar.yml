@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  ts-traefik:
+    image: tailscale/tailscale:latest
+    hostname: ${TS_HOSTNAME}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_EXTRA_ARGS=--advertise-tags=${TS_ADVERTISE_TAGS}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - tailscale-data-traefik:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    restart: unless-stopped
+  traefik:
+    image: traefik:v3.3
+    command:
+      - --log.level=INFO
+      # Static: bind UDP entrypoint
+      - --entryPoints.udp25565.address=:25565/udp
+      # Dynamic: load from file provider
+      - --providers.file.filename=/etc/traefik/dynamic/config.yml
+      - --providers.file.watch=true
+    ports:
+      - "25565:25565/udp"
+    configs:
+      - source: traefik_dynamic
+        target: /etc/traefik/dynamic/config.yml
+        mode: 0444
+    network_mode: service:ts-traefik
+    depends_on:
+      - ts-traefik
+volumes:
+  tailscale-data-traefik:
+    driver: local
+
+
+configs:
+  traefik_dynamic:
+    content: |
+      udp:
+        routers:
+          udp25565:
+            entryPoints:
+              - udp25565
+            service: udp25565-svc
+
+        services:
+          udp25565-svc:
+            loadBalancer:
+              servers:
+                - address: "100.64.136.29:25565"
