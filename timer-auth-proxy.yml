@@ -44,6 +44,8 @@ configs:
   traefik_dynamic:
     # noinspection HttpUrlsUsage
     content: |
+      accessLog:
+        format: common
       http:
         routers:
           tcp2096:
