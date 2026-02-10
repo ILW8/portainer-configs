@@ -28,6 +28,8 @@ services:
       # Dynamic: load from file provider
       - --providers.file.filename=/etc/traefik/dynamic/config.yml
       - --providers.file.watch=true
+      - --accesslog=true
+      - --accesslog.format=common
     configs:
       - source: traefik_dynamic
         target: /etc/traefik/dynamic/config.yml
@@ -44,10 +46,6 @@ configs:
   traefik_dynamic:
     # noinspection HttpUrlsUsage
     content: |
-      accessLog:
-        format: common
-        fields:
-          defaultMode: keep
       http:
         routers:
           tcp2096:
