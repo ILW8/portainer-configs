@@ -29,11 +29,7 @@ services:
       - --providers.file.filename=/etc/traefik/dynamic/config.yml
       - --providers.file.watch=true
       - --accesslog=true
-      - --accesslog.format=json
-      - --accesslog.fields.defaultMode=keep
-      - --accesslog.fields.names.RequestHost=keep
-      - --accesslog.fields.headers.defaultMode=keep
-      - --accesslog.fields.headers.names.Host=keep
+      - --accesslog.format=common
     configs:
       - source: traefik_dynamic
         target: /etc/traefik/dynamic/config.yml
