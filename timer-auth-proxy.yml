@@ -46,6 +46,8 @@ configs:
     content: |
       accessLog:
         format: common
+        fields:
+          defaultMode: keep
       http:
         routers:
           tcp2096:
