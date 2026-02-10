@@ -25,6 +25,7 @@ services:
     command:
       - --log.level=INFO
       - --entryPoints.tcp2096.address=:2096/tcp
+      - --entryPoints.tcp2096.http.tls=true
       # Dynamic: load from file provider
       - --providers.file.filename=/etc/traefik/dynamic/config.yml
       - --providers.file.watch=true
