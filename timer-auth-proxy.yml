@@ -49,6 +49,7 @@ configs:
           tcp2096:
             entryPoints:
               - tcp2096
+            rule: Host(`${DASHBOARD_HOST}`)
             service: tcp2096-svc
             middlewares:
               - dashboard-basic-auth
