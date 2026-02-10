@@ -60,7 +60,7 @@ configs:
           tcp2096-svc:
             loadBalancer:
               servers:
-                - address: "http://${TARGET_HOST}:${TARGET_PORT}"
+                - url: "http://${TARGET_HOST}:${TARGET_PORT}"
       
         middlewares:
           dashboard-basic-auth:
