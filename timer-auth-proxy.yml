@@ -50,9 +50,17 @@ configs:
             entryPoints:
               - tcp2096
             service: tcp2096-svc
+            middlewares:
+              - dashboard-basic-auth
 
         services:
           tcp2096-svc:
             loadBalancer:
               servers:
                 - address: "http://${TARGET_HOST}:${TARGET_PORT}"
+      
+        middlewares:
+          dashboard-basic-auth:
+            basicAuth:
+              users:
+                - "${DASHBOARD_USER}:${DASHBOARD_PASSWORD_HASH}"
