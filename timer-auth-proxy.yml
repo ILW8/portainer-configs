@@ -59,7 +59,7 @@ configs:
           overlay:
             entryPoints:
               - tcp2096
-            rule: Host(`timer.btmc.live`) && Path(`/overlay`)
+            rule: Host(`${DASHBOARD_HOST}`) && Path(`/overlay`)
             service: overlay-svc
             middlewares:
               - overlay-path-rewrite
