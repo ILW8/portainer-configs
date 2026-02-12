@@ -83,7 +83,7 @@ configs:
                 - "${DASHBOARD_USER}:${DASHBOARD_PASSWORD_HASH}"
           overlay-path-rewrite:
             replacePath:
-              path: "/raw/jvws6y7mdti5lzbclbgalnpvarva/bmc-time/overlay.html"
+              path: "/raw/jvws6y7mdti5lzbclbgalnpvarva/bmc-timer/overlay.html"
           content-disposition-header-rewrite:
             headers:
               customResponseHeaders:
