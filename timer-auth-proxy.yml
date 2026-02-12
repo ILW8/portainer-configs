@@ -56,15 +56,36 @@ configs:
             service: tcp2096-svc
             middlewares:
               - dashboard-basic-auth
+          overlay:
+            entryPoints:
+              - tcp2096
+            rule: Host(`timer.btmc.live`) && Path(`/overlay`)
+            service: overlay-svc
+            middlewares:
+              - overlay-path-rewrite
+              - content-disposition-header-rewrite
 
         services:
           tcp2096-svc:
             loadBalancer:
               servers:
                 - url: "http://${TARGET_HOST}:${TARGET_PORT}"
+          overlay-svc:
+            loadBalancer:
+              passHostHeader: false
+              servers:
+                - url: "https://link.storjshare.io"
       
         middlewares:
           dashboard-basic-auth:
             basicAuth:
               users:
                 - "${DASHBOARD_USER}:${DASHBOARD_PASSWORD_HASH}"
+          overlay-path-rewrite:
+            replacePath:
+              path: "/raw/jvws6y7mdti5lzbclbgalnpvarva/bmc-time/overlay.html"
+          content-disposition-header-rewrite:
+            headers:
+              customResponseHeaders:
+                Content-Disposition: ""
+                Content-Type: "text/html; charset=utf-8"
